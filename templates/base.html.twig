@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scale=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/bootstrap-datetimepicker.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/swiper.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/all.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+        <script type="text/javascript" src="/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/popper.min.js"></script>
+        <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="/js/swiper-bundle.min.js"></script>
+        <script type="text/javascript" src="/js/validate.js"></script>
+        <script type="text/javascript" src="/js/apply.js"></script>
+        
+        {% block javascript %}{% endblock %}
+    </head>
+    <body>
+    {% include 'complement/header.html.twig' %}
+        {% for label, message in app.flashes %}
+            <div class="container text-center">
+                <div class="alert alert-{{label}}">
+                {% for message in message %}
+                    <p>{{message|raw}}</p>
+                {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        {% block body %}
+        {% endblock %}        
+    </body>
+</html>

@@ -1,0 +1,60 @@
+{% set ap = app.user %}
+{% if ap | length > 0 %}
+<nav class="navbar navbar-expand-lg card navbar-responsive sticky-top" id="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand text-uppercase float-start" href="#" id="inhead" data-text="Z-Link">Z-Link</a>
+        <div class="collapse navbar-collapse">
+            <ul class="float-start navbar-nav ml-auto col-lg-auto" >
+                <li class="nav-item">
+                    <a class="nav-link float-start" href="{{path('home')}}">Accueil</a>
+                    <a class="nav-link float-start" href="{{path('viewproject')}}">Mon Projet</a>
+                    <a class="nav-link float-end" href="#">A Propos</a>
+                </li>
+                <div class="btn-group">
+                    <li class="nav-link dropdown-toggle dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false" >Nouveau</li>
+                    <ul class="dropdown-menu dropdown-menu" aria-labelledby="project" id="navproject">
+                        <li><a class="dropdown-item" href="{{path('nclass')}}">Categorie</a></li>
+                        <li><a class="dropdown-item" href="{{path('newcompte')}}">Compte</a></li>
+                        <li><a class="dropdown-item" href="{{path('newproject')}}">Projet</a></li>
+                        <li><a class="dropdown-item" href="{{path('adminviewproject')}}">Liste</a></li>
+                        <li><a class="dropdown-item" href="#">Suggestion</a></li>
+                    </ul>
+                </div>
+            </ul>
+        </div>
+        <ul class="float-end navbar-nav mr-auto col-lg-auto ">
+            <div class="btn-group" id="dma">
+                <li type="button" class="nav-link dropdown-toggle btn dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false"><img src="/img/user/{{ap.ph}}" class="rounded" id="mypicture">
+                {{ap.lastname}}</li>
+                <ul class="dropdown-menu dropdown-menu" aria-labelledby="dm" id="navprofil">
+                    <li><a class="dropdown-item" href="{{path('editProfil')}}">Mon profil</a></li>
+                    <li><a class="dropdown-item" href="{{path('editpass')}}">Mot de pass</a></li>
+                    <li><a class="dropdown-item" href="#">A propos</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="{{path('exit')}}">Déconnexion</a></li>
+                </ul>
+            </div>
+        </ul>
+    </div>
+</nav>
+{% else %}
+<nav class="navbar navbar-expand-lg card navbar-responsive sticky-top" id="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand text-uppercase float-start" href="#" id="inhead" data-text="Z-Link">Z-Link</a>
+        <div class="collapse navbar-collapse">
+            <ul class="float-start navbar-nav ml-auto col-lg-auto">
+                <li class="nav-item">
+                    <a class="nav-link float-start" href="{{path('home')}}">Accueil</a>
+                    <a class="nav-link float-start" href="{{path('viewproject')}}">Mon Projet</a>
+                    <a class="nav-link float-end" href="#">A Propos</a>
+                </li>
+            </ul>
+        </div>
+        <ul class="float-end navbar-nav mr-auto col-lg-auto">
+            <li class="nav-item">
+                <a class="nav-link text-white float-end" href="{{path('login_acces')}}">Connexion</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endif %}

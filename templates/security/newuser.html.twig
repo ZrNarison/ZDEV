@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block head %}{% endblock  %}
+{% block body %}
+{% form_theme form _self  %}
+<div class="jumbotron container spacer card col-md-4 col-md-offset-3 mt-4" id="form">
+    <div class="row">
+        <div class="panel-primary h1 text-center text-uppercase">Administrateur</div>
+        <div class="panel-body">
+            <div class="form-group mt-3">
+                {{ include ('data/data.html.twig', {form: form,button:('Enregistrer')} )}}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

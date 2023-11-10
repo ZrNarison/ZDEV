@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container">
+        <h1 class="my-2 text-center">Liste des toutes les projets</h1>
+        <div class="container row mt-3 float-none">
+            {% if projet | length > 0 %}
+                <table class="table table-striped table table-hover bg-secondary">
+                    <thead class="text-white text-uppercase">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Version</th>
+                            <th>Langage</th>
+                            <th class="text-center">sortie</th>
+                            <th>Description</th>
+                            <th class="text-danger">Action</th>
+                        </tr>
+                    </thead>
+                    {% for l in projet %}
+                    <tbody class="bg-white">
+                        <tr>
+                            <td>{{l.Title|upper}}</td>
+                            <td>{{l.Version|upper}}</td>
+                            <td class="text-justify">{{l.Techno|upper}}</td>
+                            <td class="text-center">{{l.Datedesortie|date("d/m/Y")}}</td>
+                            <td>{{l.Description|u.truncate(60,'.')}}</td>
+                            <td class="col-md-1">
+                                <a href="{{path('Modproject',{'eproject':l.id})}}" class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a onclick="return confirm('Etes vous sur d avoir supprimer le projet nommé  {{l.Title|upper}} ?')" href="{{path('delproject',{'supp':l.id})}}" class="btn btn-sm"><i class="fas fa-trash text-danger"></i></a>
+                            <td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="h1 text-danger text-center"><em>Panier de projet vide</em></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

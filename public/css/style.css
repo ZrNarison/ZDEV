@@ -1,0 +1,185 @@
+.error{
+    color: red;
+    font-style:italic;
+    display: inline;
+ }
+:root{
+    --bg-color:#081b29;
+    --second-bg-color:#081b29;
+    --text-color:#ededed;
+    --main-color:#00abf0;
+}
+html{
+    font-size: 94.5%;
+    overflow-x: hidden;
+}
+body,#form{
+    background: var(--bg-color);
+    color:var(--text-color) ;
+}
+#form{
+    box-sizing: var(--text-color);
+    border: 1px solid var(--text-color);
+} 
+.form-control{
+    background:#081b29;
+ }
+
+.form-group .form-control::after{
+    color: var(--text-color);
+}
+#form .fw-bold,.control-label,#text,body .container .card-body .h6, .form-group .form-control{
+    color: #ededed;
+}
+ #navbar{
+    background:transparent;
+ }
+
+ /* #navbar, #navproject ,#navprofil{
+    background:transparent;
+ } */
+ .navbar a:hover, .navbar a.active{
+        color:var(--main-color)
+ }
+ #inhead{
+    font-size: 2vw;
+    position:relative;
+    color: rgb(85, 178, 166);
+    /* -webkit-text-stroke:0.3vw #9d3239; */
+ }
+ #dropdownproject{
+    display: block;
+ }
+ #pform{
+    border: 1px solid rgb(12, 161, 215);
+ }
+ #connexion{
+    margin-left: auto;
+    margin-right: 1%;
+ }
+ @keyframes animate {
+    0%,10%,100%
+    {
+        width: 0;
+    }
+    70%,90%
+    {
+        width: 100%;
+    }
+ }
+ #mypicture{
+    width: 22px;
+    border-radius: 25%;
+ }
+ #dma{
+    /* margin-left: auto; */
+    margin-right: 100px;
+ }
+ /* body{
+     background-color: rgba(172, 170, 170, 0.912); 
+     color:whitesmoke;
+     width: 100%;
+} */
+.row .container-fluid{
+    display: grid;
+}
+label{
+    visibility: hidden;
+}
+#mydev{width: 150px;height: 100px;}
+.container-fluid .jumbotron h1{
+    position: relative;border-radius: 0 25px 0 25px;
+}
+.row img{
+    width: 250px;
+    height: 245px;
+    border-radius: 50%;
+    position: relative;
+    align-content: center;
+}
+.btn .btn-outline-success{
+    cursor: pointer
+}
+#ad_Version{
+    width: 120px;
+}
+#ad_datedesortie{
+    width: 150px;
+}
+#sugHead{
+    border-radius: 0 25px 25px 0 25px;
+}
+#sugheadtext{
+    border-radius: 0 25px 25px 0 25px;
+    background-color: #0e1fb8;
+    text-align: center;
+}
+#sugHead .btn {
+    background-color: green;
+    font-size: small;
+}
+.one-dev{
+    width: 50%;
+    margin-top: 15px;
+}
+#onepicture{
+    margin-top: 15px;
+    position: relative;
+    background: transparent;
+    border: .2rem solid rgb(19, 95, 218);
+    transition: 3s;
+    opacity: .5;
+}
+#onepicture:hover{
+    background: var(--bg-color);
+    opacity: 5;
+}
+section {
+    min-height:auto;
+    padding-bottom: 7rem;
+    margin-bottom: 0px;
+    /* background: white; */
+}
+section #form{
+    border: none;
+    display: grid;
+}
+section h2 span{
+    color: var(--main-color);
+}
+.form-control:hover{
+    color: var(--bg-color);    
+}
+section #form .form-control{
+    background:white;
+    text-decoration: #081b29;
+    color: black;
+    border: var(--main-color);
+}
+#sug_Contact{
+    margin-top: 1px;
+    margin-bottom: 2px;
+    /* width: 350px; */
+}
+#sug_Sugemail{
+    margin-top: 1px;
+    margin-bottom: 2px;
+    /* width: 350px; */
+    
+}
+#sug #form .btn{
+    background: var(--main-color);
+}
+div.one-dev{
+    padding: 2em;
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+}
+div.one-dev .container h1,div.one-dev .container p{
+    color: var(--bg-color);
+    text-shadow: 3px 3px 3px var(--second-bg-color);
+}
+legend{
+    visibility: hidden;
+}

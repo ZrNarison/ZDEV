@@ -1,0 +1,6 @@
+<div class="d-inline-block row text-justify mt-5">
+{% for inf in info %}
+    <img src="/img/user/{{inf.ph}}" alt="image" style="margin-top:-200px;margin-left: 25px;">
+    <p class="h5 float-start text-center">Moi, je m'appele {{inf.firstname|upper}} {{inf.lastname}} </p>
+{% endfor %}
+</div>

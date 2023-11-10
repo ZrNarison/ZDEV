@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block head %}{% endblock  %}
+{% block body %}
+	<div class="jumbotron container spacer card col-md-4 col-md-offset-3 mt-4" id="form">
+		<div class="row text-dark">
+			<div class="panel-primary h1 text-center text-uppercase fw-bold">login</div>
+			<form action="{{path('login_acces')}}" method="POST" id="formlogin">
+				{% if err %}
+					<div class="alert alert-danger text-center mt-5 h3">Une erreur est survenue, le nom d'utilisateur ou mot de passe est invalide !</div>
+				{% endif %}
+				<div class="panel-body">
+					<div class="form-group mb-2 mt-2">
+						<label class="control-label">Utilisateur </label>
+						<input type="text" name="_username" id="email" value="{{uti}}" class="form-control text-center rounded" placeholder="Nom d'utilisateur" />
+					</div>
+					<div class="form-group mb-2 mt-2 ">
+						<label class="control-label">Mot de pass</label>
+						<input type="password" name="_password" id="passwordlogin" class="form-control text-center" placeholder="Mot de pass d'utilisateur"/>
+					</div>
+					<div class="form-group">
+						<input type="checkbox" name="checkbox" id="checkbox"/>
+						<label class="text-bold" id="text">Afficher le mot de pass</label>
+					</div>
+					<div  class="container center">
+						<button  id="btn-action" class="btn btn-outline-success mb-5 mt-5 col-md-5 float-none" name="button">Connexion</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
