@@ -183,3 +183,23 @@ div.one-dev .container h1,div.one-dev .container p{
 legend{
     visibility: hidden;
 }
+.carousel-inner .carousel-item img{
+    border: 2px solid green;
+    display: block;
+}
+#cv{
+    margin-left: 75px;
+    border-radius: 25px 0 25px 0;
+    margin-top: 8px;
+    width: 210px;
+    height: 202px;
+}
+#corps{
+    text-decoration: #081b29;
+    background-color: #d6d0d0;
+}
+#page{
+    width: 90%;
+    height: auto;
+    margin-left: 55px;
+}

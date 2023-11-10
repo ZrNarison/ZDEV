@@ -16,7 +16,7 @@
                     <tr>
                         <td>{{l.Title|upper}}</td>
                         <td class="col-md-1">
-                            <a href="{{path('Modproject',{'eproject':l.Id})}}" class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{{path('class_edit',{'slug':l.RoleSlug})}}" class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a onclick="return confirm('Etes vous sur d avoir supprimer le projet nommé  {{l.Title|upper}} ?')" href="{{path('delcateg',{'suppid':l.id})}}" class="btn btn-sm"><i class="fas fa-trash text-danger"></i></a>
                         <td>
                     </tr>
@@ -24,7 +24,7 @@
                 {% endfor %}
             </table>
         {% else %}
-            <p class="h1 text-danger text-center"><em>Panier de projet vide</em></p>
+            <p class="h1 text-danger text-center"><em>Panier vide</em></p>
         {% endif %}
     </div>
 </div>

@@ -1,33 +1,36 @@
 {% extends 'base.html.twig' %}
 {% block title %}
     {# {{dump(onedev.title)}} #}
-    {{onedev.title|upper}} {{onedev.version}}
+    {{ad.title|upper}} {{ad.version}}
 {% endblock %}
 {% block body %}
-<div class="one-dev" style="background-image: url( /img/dev/{{ onedev.fichiers }} )">
+<div class="one-dev" style="background-image: url( /img/dev/{{ ad.fichiers }} )">
     <div class="container">
-        <h1>{{onedev.Title|upper}}</h1>
-        <p class"h2">{{onedev.version}}</p>
+    <div class="container">
+        <h1>{{ad.Title|upper}}</h1>
+        <p class"h2">{{ad.version}}</p>
         <a href="{{path('viewproject')}}" class="btn btn-primary">{{'Retour'}}</a>
+    </div>
     </div>
 </div>
 <div class="container mt-3 text-body">
     <div class=" container row">
         <div class="col-md-8 mb-0 text-white-50">
-        {# {{onedev.title}} est {{onedev.description|raw}}. Développé en {{onedev.Techno|upper }} Technologie (langage de programmation) du {{onedev.Datedesortie|date("d/m/Y")}}  #}
+        {{ad.title}} est {{ad.description|raw}}. Développé en {{ad.Techno|upper }} Technologie (langage de programmation) du {{ad.Datedesortie|date("d/m/Y")}} 
             <div id="carouselIndecators" >
                 <ol class="carousel-indecators">
-                {# {% for ondev in onedev %} #}
-                    {# <li class="#cIndicators" data-slide-to="0" {% if loop.ondev %}class="active" {% endif %}></li> #}
-                {# {% endfor %} #}
+                    {# {% for posteur in ad.posteurs %}
+                        <li class="#cIndicators" data-slide-to="{{loop.index0}}" {% if loop.posteur %} class="active" {% endif %}></li>
+                    {% endfor %} #}
                 </ol>
                 <div class="carousel-inner" >
-                    {% for im in onedev.posteurs %}
-                        <div class="carousel-item {% if loop.first %} active {% endif %}">
-                            <img class"d-none d-md-block w-10" src="/img/dev/{{im.photo}}" alt="{{im.caption}}">
+                    {% for posteur in ad.posteurs %}
+                        {# <div class="carousel-item {% if loop.first %} active {% endif %}"> #}
+                        <div class="carousel-item active ">
+                            <img class"d-none d-md-block w-10" src="/img/dev/{{posteur.photo}}" alt="{{posteur.caption}}">
                             <div class="">
-                                <h5>{{onedev.Title}}</h5>
-                                <p>{{im.caption}}</p>
+                                <h5>{{ad.Title}}</h5>
+                                <p>{{posteur.caption}}</p>
                             </div>
                         </div>
                     {% endfor %}
@@ -38,7 +41,7 @@
         <div class="col-md-3">
             <div class="row">
                 <div class="col-8">
-                   {% for inf in onedev %}
+                   {% for inf in ad %}
                         <img src="/img/user/{{inf.ph}}" alt="image" id="onepicture">
                         <span class="circle-spin"></span>
                         <p class="h5 float-start text-center bg-secondary">Moi, je m'appele {{inf.firstname|upper}} {{inf.lastname}} </p>

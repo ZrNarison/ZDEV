@@ -22,9 +22,9 @@ class EditAdType extends AppType
             ->add('Title',TextType::class, $this->conf("Nom : ","Nom de l'application"))
             ->add('Version',TextType::class, $this->conf("Version : ","En chiffre"))
             ->add('Techno',TextType::class, $this->conf("Techno : ","Langage de programmation"))
-            ->add('fichiers',FileType::class, $this->conf("Image : ",""))
+            // ->add('fichiers',FileType::class, $this->conf("Image : ",""))
             ->add('Description',TextareaType::class, $this->conf("Description : ","Description"))
-            ->add('datedesortie',DateType::class, $this->conf("Date de sortie : ","date ",["widget"=>"single_text"]))
+            // ->add('datedesortie',DateType::class, $this->conf("Date de sortie : ","date ",["widget"=>"single_text"]))
             ->add(
                 'posteurs',
                 CollectionType::class,

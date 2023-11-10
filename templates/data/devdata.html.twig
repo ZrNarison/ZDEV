@@ -7,7 +7,7 @@
         </div>
         <p class="text-uppercase lead text-danger text-bold text-center">{{d.title}} {{d.version}}</p>                    
         <p class="text-center text-white">{{d.description|u.truncate(60,'...')}}</p>                    
-        <p class="container"><a href="{{path('vueonedev',{'project':d.Id})}}" class="btn btn-outline-success fs-6">{{'En savoir plus'|u.truncate(15,'...')}}</a></p>
+        <p class="container"><a href="{{path('vueonedev',{'slug':d.slug})}}" class="btn btn-outline-success fs-6">{{'En savoir plus'|u.truncate(15,'...')}}</a></p>
         {# <p class="container"><a href="{{path('vueonedev',{'project':d.Id})}}" class="btn btn-outline-success fs-6">{{'En savoir plus'|u.truncate(15,'...')}}</a></p> #}
     </div>
 </div>

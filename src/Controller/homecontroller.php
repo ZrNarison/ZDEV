@@ -16,6 +16,7 @@ use Cocur\Slugify\Slugify;
 use App\Form\CategorieType;
 use App\Entity\UpdatePassword;
 use App\Form\EditPasswordType;
+use App\Form\EditCategorieType;
 use App\Repository\AdRepository;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
@@ -75,10 +76,10 @@ class homecontroller extends AbstractController{
          $user = $this->getUser();
          $slugify = new Slugify();
         $project = new Ad();
-        $photo = new Posteur();
-        $photo ->setPhoto('')
-               ->setCaption('');
-        $project->addPosteur($photo);
+        // $photo = new Posteur();
+        // $photo ->setPhoto('')
+        //        ->setCaption('');
+        // $project->addPosteur($photo);
         $form = $this -> createForm(AdType::class,$project);
         $form->handleRequest($rqt);
         if($form->isSubmitted()){
@@ -110,7 +111,7 @@ class homecontroller extends AbstractController{
     }
     /**
      * Suppression de projet
-     * @Route("/Suppression/{supp}", name="delproject")
+     * @Route("/Suppression/{id}", name="delproject")
      * @return Response
      */
     public function deleteproject(Ad $supp):Response
@@ -131,27 +132,46 @@ class homecontroller extends AbstractController{
             'projet' => $project
         ]);
     }
-    
     /**
      * @Route("/Editer/{eproject}", name="Modproject")
      * @return Response
      */
-    // public function edit(Ad $eproject)
-    public function editAd(Ad $eproject, Request $rqt):Response
-    {
-        $form = $this -> creatForm(EditAdType::class, eproject);
-        // $form -> handleRequest($rqt);
+    public function Editproject(string $eproject,AdRepository $repository, Request $rqt){
+        $ad=$repository->findOneBy(['Slug'=>$eproject]);
+        $form = $this -> createForm(EditAdType::class, $ad);
+        $form -> handleRequest($rqt);
         if($form->isSubmitted()&&$form->isValid()){
             $mng = $this-> getDoctrine()->getManager();
-            $mng -> persist ($eproject);
+            $mng -> persist ($ad);
             $mng-> flush();
-            return $this->redirectToRoute('Adminviewproject');
+            return $this->redirectToRoute('adminviewproject');
         }
         return $this->render("editer/editproject.html.twig",[
             "form"=> $form->createView(),
-            "project"=>$eproject
+            "ad"=>$ad
         ]);
     }
+    /**
+     * Editer classement
+     * @Route("/Editer/{slug}", name="class_edit")
+     * @return Response
+     */
+    public function Editclassement(string $slug,RoleRepository $classement, Request $rqt){
+        $AdClass=$classement->findOneBy(['RoleSlug'=>$slug]);
+        $form = $this -> createForm(EditCategorieType::class, $AdClass);
+        $form -> handleRequest($rqt);
+        if($form->isSubmitted()&&$form->isValid()){
+            $mng = $this-> getDoctrine()->getManager();
+            $mng -> persist ($AdClass);
+            $mng-> flush();
+            return $this->redirectToRoute('adminviewclassement');
+        }
+        return $this->render("editer/editclass.html.twig",[
+            "form"=> $form->createView(),
+            "AdClass"=>$AdClass
+        ]);
+    }
+
     /**
      * Visualisation des classement
      * @Route("/view-adminclassement",name="adminviewclassement")
@@ -162,6 +182,8 @@ class homecontroller extends AbstractController{
             'categ' => $categ
         ]);
     }
+
+    
 
     /**
      * Ajout compte d'Administrateur
@@ -184,7 +206,6 @@ class homecontroller extends AbstractController{
             $directory=$this->getParameter('user_directory');
             $filename=md5(uniqid()).'.'. $fichier->guessExtension();
             $newUser->setph($filename);
-            // dump($newUser);die();
             $hash=$encoder->encodePassword($newUser,$newUser->getpsd());
             $newUser->setpsd($hash);
             $mng = $this -> getDoctrine()->getManager();
@@ -201,13 +222,14 @@ class homecontroller extends AbstractController{
     }
     /**
      * Afficher un seul projet
-     * @Route("/view/{project}", name="vueonedev")
+     * @Route("/view/{slug}", name="vueonedev")
      * @return Response
      */
-    public function OneShow($project, AdRepository $oned){
-        $p=$oned->findOneById($project);
+    public function OneShow(string $slug,AdRepository $repository){
+        $ad=$repository->findOneBy(['Slug'=>$slug]);
+        // dd($ad);
         return $this->render('page/onedev.html.twig', [
-            'onedev' => $p
+            'ad' => $ad
         ]);
     }
     /**
@@ -258,10 +280,11 @@ class homecontroller extends AbstractController{
      */
     public function logout_account()
     {
-       return $this->redirectToRoute('login_acces'); 
+       return $this->redirectToRoute('home'); 
     }
 
     /**
+     * Editer profil d'administation
      * @Route("/Edit-Profil/Admin", name="editProfil")
      *
      * @param Request $rqt
@@ -285,6 +308,7 @@ class homecontroller extends AbstractController{
     
     
     /**
+     * Modifier mot de pass d'administration
      * @Route("/update-password", name="editpass")
      * @Route("/updatepass")
      * 
@@ -327,5 +351,24 @@ class homecontroller extends AbstractController{
         $mgr->remove($suppid);
         $mgr->flush();
         return $this->redirectToRoute('Adminviewproject');
+    }
+    /**
+     * @Route("Z-LINK/A_propos", name="z-apropos")
+     * @return Response
+     */
+    public function z_apropos()
+    {
+        return $this->render("page/zapropos.html.twig");
+    }
+    /**
+     * @Route("/A_propos ", name="userapropos")
+     * @return Response
+     */
+    public function user_apropos()
+    {
+        $tdat = date("Y");
+        return $this->render("complement/folio.html.twig",[
+            'dat'=>$tdat
+        ]);
     }
 }

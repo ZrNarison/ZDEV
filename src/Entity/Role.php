@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=RoleRepository::class)
- * @HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks()
  */
 class Role
 {
@@ -30,10 +31,29 @@ class Role
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $RoleSlug;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
     }
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * Undocumented function
+     *
+     * @return integer|null
+     */
+    public function initializeSlug(){
+        if(empty($this->RoleSlug)){
+            $slugify= new Slugify();
+            $this->RoleSlug = $slugify->Slugify($this->title);
+        }
+    }
+
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -82,6 +102,18 @@ class Role
     public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
+
+        return $this;
+    }
+
+    public function getRoleSlug(): ?string
+    {
+        return $this->RoleSlug;
+    }
+
+    public function setRoleSlug(string $RoleSlug): self
+    {
+        $this->RoleSlug = $RoleSlug;
 
         return $this;
     }
