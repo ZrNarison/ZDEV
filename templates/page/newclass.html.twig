@@ -4,7 +4,7 @@
 {% form_theme form _self  %}
 <div class="jumbotron container spacer card col-md-4 col-md-offset-3 mt-4" id="form">
     <div class="row">
-        <div class="panel-primary h1 text-center text-uppercase">Catégorie <a href="{{path('adminviewclassement')}}"><i class="fas fa-print float-end" alt="Imprimer"></i></a></div>
+        <div class="panel-primary h1 text-center text-uppercase">Catégorie <a href="{{path('adminviewclassement')}}"><i class="fa-solid fa-list float-end text-white"></i></a></div>
         <div class="panel-body">
             <div class="form-group mt-3">
                 {{ include ('data/data.html.twig', {form: form,button:('Enregistrer')} )}}

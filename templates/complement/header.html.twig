@@ -16,14 +16,14 @@
                         <li><a class="dropdown-item" href="{{path('nclass')}}">Categorie</a></li>
                         <li><a class="dropdown-item" href="{{path('newcompte')}}">Compte</a></li>
                         <li><a class="dropdown-item" href="{{path('newproject')}}">Projet</a></li>
-                        <li><a class="dropdown-item" href="{{path('adminviewproject')}}">Liste</a></li>
-                        <li><a class="dropdown-item" href="#">Suggestion</a></li>
+                        {# <li><a class="dropdown-item" href="{{path('adminviewproject')}}">Liste</a></li> #}
+                        <li><a class="dropdown-item" href="{{path('adminviewsuggestion')}}">Suggestion</a></li>
                     </ul>
                 </div>
             </ul>
         </div>
         <ul class="float-end navbar-nav mr-auto col-lg-auto ">
-            <div class="btn-group" id="dma">
+            <div class="nav-item btn-group float-end" id="dma">
                 <li type="button" class="nav-link dropdown-toggle btn dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false"><img src="/img/user/{{ap.ph}}" class="rounded" id="mypicture">
                 {{ap.lastname}}</li>
                 <ul class="dropdown-menu dropdown-menu" aria-labelledby="dm" id="navprofil">

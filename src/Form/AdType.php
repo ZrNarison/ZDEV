@@ -21,7 +21,7 @@ class AdType extends AppType
         $builder
             ->add('Title',TextType::class, $this->conf("Nom : ","Nom de l'application"))
             ->add('Version',TextType::class, $this->conf("Version : ","En chiffre"))
-            ->add('Techno',TextType::class, $this->conf("Techno : ","Langage de programmation"))
+            ->add('Techno',TextType::class, $this->conf("Techno : ","Langage de programmation utiliser"))
             ->add('fichiers',FileType::class, $this->conf("Image : ",""))
             ->add('Description',TextareaType::class, $this->conf("Description : ","Description"))
             ->add('datedesortie',DateType::class, $this->conf("Date de sortie : ","date ",["widget"=>"single_text"]))

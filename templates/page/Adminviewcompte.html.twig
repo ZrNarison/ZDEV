@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container">
+        <h1 class="my-2 text-center">Liste des toutes les comptes</h1>
+        <div class="container row mt-3 float-none">
+            {% if User | length > 0 %}
+                <table class="table table-striped table table-hover bg-secondary">
+                    <thead class="text-white text-uppercase">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th class="text-center">Email</th>
+                            <th>Photo</th>
+                            <th class="text-danger">Mot de pass</th>
+                            <th>Information</th>
+                        </tr>
+                    </thead>
+                    {% for U in User %}
+                    <tbody class="bg-white">
+                        <tr>
+                            <td>{{U.Id|number_format}}</td>
+                            <td>{{U.Firstname|upper}}</td>
+                            <td class="text-justify">{{U.Lastname|lower}}</td>
+                            <td class="text-center">{{U.email|lower}}</td>
+                            <td><img src="/img/user/{{U.ph}}" class="rounded" id="phcompte"></td>
+                            <td>{{U.psd|u.truncate(20,'...')}}</td>
+                            <td>{{U.Information|u.truncate(130,'...')}}</td>
+                            <td class="col-md-1">
+                                {# <a href="{{path('Mod_project',{'slug':U.SlugUser})}}" class="btn btn-sm"><i class="fa-solid fa-pen-to-square text-success"></i></a> #}
+                                <a onclick="return confirm('Etes vous sur d avoir supprimer le projet nommé  {{U.Firstname|upper}} ?')" href="{{path('comptedelete',{'slugcompte':U.id})}}" class="btn btn-sm"><i class="fas fa-trash text-danger"></i></a>
+                            <td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="h1 text-danger text-center"><em>Panier compte vide</em></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

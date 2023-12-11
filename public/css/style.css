@@ -72,14 +72,8 @@ body,#form{
     border-radius: 25%;
  }
  #dma{
-    /* margin-left: auto; */
     margin-right: 100px;
  }
- /* body{
-     background-color: rgba(172, 170, 170, 0.912); 
-     color:whitesmoke;
-     width: 100%;
-} */
 .row .container-fluid{
     display: grid;
 }
@@ -87,7 +81,7 @@ label{
     visibility: hidden;
 }
 #mydev{width: 150px;height: 100px;}
-.container-fluid .jumbotron h1{
+.container-row .jumbotron h1{
     position: relative;border-radius: 0 25px 0 25px;
 }
 .row img{
@@ -138,7 +132,6 @@ section {
     min-height:auto;
     padding-bottom: 7rem;
     margin-bottom: 0px;
-    /* background: white; */
 }
 section #form{
     border: none;
@@ -159,12 +152,10 @@ section #form .form-control{
 #sug_Contact{
     margin-top: 1px;
     margin-bottom: 2px;
-    /* width: 350px; */
 }
 #sug_Sugemail{
     margin-top: 1px;
     margin-bottom: 2px;
-    /* width: 350px; */
     
 }
 #sug #form .btn{
@@ -202,4 +193,21 @@ legend{
     width: 90%;
     height: auto;
     margin-left: 55px;
+}
+#phcompte{
+    width: 98px;
+    height: 92px;
+}
+section{
+    display: none;
+}
+#logineye{
+    position:absolute;
+    right: 15px;
+    margin-top: -25px;
+    font-size: 13px;
+    cursor: pointer;
+}
+#logineye.active::before{
+    content: "\f070";
 }

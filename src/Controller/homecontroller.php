@@ -22,6 +22,7 @@ use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\FormError;
 use Doctrine\Persistence\ObjectManager;
+use App\Repository\SuggestionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -33,16 +34,41 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class homecontroller extends AbstractController{
     /**
+     * Connexion
+     * @Route("/login", name="login_acces")
+     * @return response
+     */
+    public function acces_login(AuthenticationUtils $verif)
+    {
+        $err = $verif -> getLastAuthenticationError();
+        $username=$verif->getLastUsername();
+        return $this->render('security/login.html.twig',[
+            'err'=> $err !== null,
+            'uti'=>$username
+        ]);
+    }
+    /**
+     * Suppression de compte
+     * @Route("/Admin/Suppression/{slugcompte}", name="comptedelete")
+     * @return Response
+     */
+    public function deletecompte(string $slugcompte,UserRepository $repository)
+    {
+        $ad=$repository->findOneBy(['id'=>$slugcompte]);
+        $mgr = $this -> getDoctrine()->getManager();
+        $mgr->remove($ad);
+        $mgr->flush();
+        return $this->redirectToRoute('adminviewcompte');
+    }
+    /**
      * Page d'accueil
      * @Route("/",name="home")
      * @Route("/homepage")
-     *
      * @return response
      */
     public function home (Request $rq, UserRepository $info)
     {
         $sug = new Suggestion();
-        $i = $info->findAll();
         $form = $this -> createForm(SugType::class,$sug);
         $form->handleRequest($rq);
         if($form->isSubmitted()){
@@ -53,12 +79,13 @@ class homecontroller extends AbstractController{
         }
         return $this->render("page/homepage.html.twig",[
             'form'=> $form->createView(),
-            'info' => $i
             ]);
     }
+    
     /**
      * Voir les projets
      * @Route("/view-project",name="viewproject")
+     * @return Response
      */
     public function viewproject(AdRepository $vproject){
         $project = $vproject->findAll();        
@@ -69,38 +96,41 @@ class homecontroller extends AbstractController{
 
     /**
      * Ajout de projet
-     * @Route("/Ad-newproject",name="newproject")
-     * @Route("/Ad-newdev")
+     * @Route("/Admin/Ad-newproject",name="newproject")
+     * @Route("/Admin/Ad-newdev")
+     * @return Response
      */
     public function newprojetct(Request $rqt){
-         $user = $this->getUser();
-         $slugify = new Slugify();
+        $user = $this->getUser();
         $project = new Ad();
-        // $photo = new Posteur();
-        // $photo ->setPhoto('')
-        //        ->setCaption('');
-        // $project->addPosteur($photo);
+        $slugify = new Slugify();
+        $mgr = $this-> getDoctrine()->getManager();
         $form = $this -> createForm(AdType::class,$project);
         $form->handleRequest($rqt);
         if($form->isSubmitted()){
-            foreach($project->getPosteurs ()as $posteurs){
-                    $posteurs->setAd($project);
+            foreach($project->getPosteurs()as $posteurs){
+                $photo=$posteurs->getPhoto();
+                // $photo=$posteurs->getPhoto()->getData() ;
+                dump($photo);
+                // $posteurs -> setAd($project);
+                // $postfile = md5(uniqid()).'.'.$photo->guessExtension();//Misy erreur maka ny extension files impoté
+                // $directoryposteur=$this->getParameter('pos_directory');
+                // $posteurs->setphoto($postfile);
+                // $mgr->persist($posteurs);
+                // $photo->move($directoryposteur,$postfile);
             }
-            $mgr = $this-> getDoctrine()->getManager();
             $fichier = $form->get('fichiers')->getData();
-            $posteurphoto = $form->get('photo')->getData();
-            $project  ->setAuteur($user); 
-            $directory=$this->getParameter('dev_directory');
-            $directoryposteur=$this->getParameter('posteur_directory');
+            $dtsortie = $form->get('datedesortie')->getData();
+            $sortie=$dtsortie->Format("d-m-Y");
+            $slug=$slugify ->slugify($form->get('Title')->getData()."-".$sortie."-". $form->get('Version')->getData());
+            $project->setAuteur($user) 
+                    ->setSlug($slug);
             $filename=md5(uniqid()).'.'. $fichier->guessExtension();
-            $posteurfile=md5(uniqid()).'.'. $posteurphoto->guessExtension();
+            $directory=$this->getParameter('dev_directory');
             $project->setFichiers($filename);
-            $photo->setphoto($posteurfile);
-            $photo ->addPosteur($project);
-            $mgr -> persist($photo);            
-            $mgr -> persist($project);            
+            dd($project,$posteurs,$fichier,$filename);
+            $mgr -> persist($project);          
             $fichier->move($directory,$filename);
-            $posteurphoto->move($directoryposteur,$posteurfile);
             $mgr -> flush();
             $this->addFlash("success","Le project N° <strong> {$project->getId()}</strong> dont son nom est <strong>  {$project->getTitle()} </strong> à été bien enregistré !");
             return $this->redirectToRoute('newproject');
@@ -109,22 +139,29 @@ class homecontroller extends AbstractController{
             'form'=> $form->createView()
             ]);
     }
+
+
     /**
      * Suppression de projet
-     * @Route("/Suppression/{id}", name="delproject")
+     * @Route("/Admin/Suppression{slug}", name="del_project")
+     * @param Ad $slug
+     * @param ObjectManager $mgr
      * @return Response
      */
-    public function deleteproject(Ad $supp):Response
+    public function deleteproject(string $slug,AdRepository $repository)
     {
+        $ad=$repository->findOneBy(['Slug'=>$slug]);
         $mgr = $this -> getDoctrine()->getManager();
-        $mgr->remove($supp);
+        dd($ad);
+        $mgr->remove($ad);
         $mgr->flush();
-        return $this->redirectToRoute('Adminviewproject');
+        return $this->redirectToRoute('adminviewproject');
     }
     
     /**
      * Visualisation des projet
-     * @Route("/view-adminproject",name="adminviewproject")
+     * @Route("/Admin/view-adminproject",name="adminviewproject")
+     * @return Response
      */
     public function viewadmproject(AdRepository $vproject){
         $project = $vproject->findAll();
@@ -133,34 +170,43 @@ class homecontroller extends AbstractController{
         ]);
     }
     /**
-     * @Route("/Editer/{eproject}", name="Modproject")
+     * Visualisation des compte
+     * @Route("/Admin/view-admincompte",name="adminviewcompte")
      * @return Response
      */
-    public function Editproject(string $eproject,AdRepository $repository, Request $rqt){
-        $ad=$repository->findOneBy(['Slug'=>$eproject]);
-        $form = $this -> createForm(EditAdType::class, $ad);
-        $form -> handleRequest($rqt);
-        if($form->isSubmitted()&&$form->isValid()){
-            $mng = $this-> getDoctrine()->getManager();
-            $mng -> persist ($ad);
-            $mng-> flush();
-            return $this->redirectToRoute('adminviewproject');
-        }
-        return $this->render("editer/editproject.html.twig",[
-            "form"=> $form->createView(),
-            "ad"=>$ad
+    public function admincompte(UserRepository $user){
+        $User = $user->findAll();
+        return $this->render('page/Adminviewcompte.html.twig', [
+            'User' => $User
         ]);
     }
+    
+    
     /**
-     * Editer classement
-     * @Route("/Editer/{slug}", name="class_edit")
+     * Visualisation des classement
+     * @Route("/Admin/view-adminclassement",name="adminviewclassement")
      * @return Response
      */
-    public function Editclassement(string $slug,RoleRepository $classement, Request $rqt){
-        $AdClass=$classement->findOneBy(['RoleSlug'=>$slug]);
+    public function viewclass(RoleRepository $cat){
+        $categ = $cat->findAll();
+        return $this->render('page/AdminClassement.html.twig', [
+            'categ' => $categ
+        ]);
+    }
+
+    /**
+     * Editer classement
+     * @Route("/Admin/mod{slugrole}", name="classedit")
+     * @return Response
+     */
+    public function Editclassement(string $slugrole,RoleRepository $classement, Request $rqt){
+        $slugify = new Slugify();
+        $AdClass=$classement->findOneBy(['RoleSlug'=>$slugrole]);
         $form = $this -> createForm(EditCategorieType::class, $AdClass);
         $form -> handleRequest($rqt);
         if($form->isSubmitted()&&$form->isValid()){
+            $slug=$slugify ->slugify($form->get('title')->getData());
+            $AdClass->setRoleSlug($slug);
             $mng = $this-> getDoctrine()->getManager();
             $mng -> persist ($AdClass);
             $mng-> flush();
@@ -173,34 +219,33 @@ class homecontroller extends AbstractController{
     }
 
     /**
-     * Visualisation des classement
-     * @Route("/view-adminclassement",name="adminviewclassement")
+     * Suppression de classement
+     * @Route("/Suppression/{slugcat}", name="delcateg")
+     * @return Response
      */
-    public function viewclass(RoleRepository $cat){
-        $categ = $cat->findAll();
-        return $this->render('page/AdminClassement.html.twig', [
-            'categ' => $categ
-        ]);
+    public function deleteclassement(string $slugcat,RoleRepository $repository)
+    {
+        $cat=$repository->findOneBy(['id'=>$slugcat]);
+        $mgr = $this -> getDoctrine()->getManager();
+        $mgr->remove($cat);
+        $mgr->flush();
+        return $this->redirectToRoute('adminviewclassement');
     }
-
-    
 
     /**
      * Ajout compte d'Administrateur
-     * @Route("/Ad-newcompte", name="newcompte")
-     * @Route("/Ad/newcompte")
-     * @Route("/Ad/ncompte")
+     * @Route("/Admin/Ad-newcompte", name="newcompte")
      * @return response
      */
     public function newcompte(Request $rqt,UserPasswordEncoderInterface $encoder)
     {
         $newUser = new User();
-        $userRoles = new Role();
         $slugify = new Slugify();
         $form=$this->createForm(UserType::class, $newUser);
         $form->handleRequest($rqt);
         if($form->isSubmitted()&& $form->isValid()){
             $fichier = $form->get('ph')->getData();
+            $nba = $form->get('Categorie')->getData();
             $name = $form->get('firstname')->getData();
             $fname = $form->get('lastname')->getData();
             $directory=$this->getParameter('user_directory');
@@ -210,7 +255,7 @@ class homecontroller extends AbstractController{
             $newUser->setpsd($hash);
             $mng = $this -> getDoctrine()->getManager();
             $mng -> persist($newUser);
-            $newUser -> addUserRole($userRoles);
+            $newUser -> addUserRole($nba);
             $fichier->move($directory,$filename);            
             $mng -> flush();
             $this->addFlash("success"," {$newUser->getlastname()}</strong> Votre compte a été bien enregistrer");
@@ -225,17 +270,18 @@ class homecontroller extends AbstractController{
      * @Route("/view/{slug}", name="vueonedev")
      * @return Response
      */
-    public function OneShow(string $slug,AdRepository $repository){
+    public function OneShow(string $slug,AdRepository $repository,UserRepository $user){
+        $users = $user->findAll();
         $ad=$repository->findOneBy(['Slug'=>$slug]);
         // dd($ad);
         return $this->render('page/onedev.html.twig', [
-            'ad' => $ad
+            'ad' => $ad,
+            'info' => $users
         ]);
     }
     /**
      * Ajout de nouveau rôle
-     * @Route("/admin-newrole", name="nclass")
-     * @Route("/admin-newclass")
+     * @Route("/Admin/admin-newrole", name="nclass")
      * @return Response
      */
     public function new_class(Request $rqt)
@@ -259,43 +305,30 @@ class homecontroller extends AbstractController{
     }
 
     /**
-     * Connexion
-     * @Route("/login", name="login_acces")
-     * @return response
-     */
-    public function acces_login(AuthenticationUtils $verif)
-    {
-        $err = $verif -> getLastAuthenticationError();
-        $username=$verif->getLastUsername();
-        return $this->render('security/login.html.twig',[
-            'err'=> $err !== null,
-            'uti'=>$username
-        ]);
-    }
-
-    /**
      * Déconnexion
      * @Route("/Deconnexion",name="exit")
      * @return Response
      */
     public function logout_account()
     {
-       return $this->redirectToRoute('home'); 
+       return $this ->redirectToRoute('home'); 
     }
 
     /**
      * Editer profil d'administation
-     * @Route("/Edit-Profil/Admin", name="editProfil")
-     *
+     * @Route("/Admin/Edit-Profil/Admin", name="editProfil")
      * @param Request $rqt
-     * @return void
+     * @return Response
      */
     public function editProfil(Request $rqt)
       {
+          $slugify = new Slugify();
           $user = $this->getUser();
           $form=$this->createForm(EditUserType::class, $user);
           $form->handleRequest($rqt);
         if($form->isSubmitted()&& $form->isValid()){
+            $slug=$slugify ->slugify($form->get('firstname')->getData()).'-'.$slugify ->slugify($form->get('lastname')->getData());
+            $user->setSlugUser($slug);
             $mng = $this -> getDoctrine()->getManager();
             $mng -> persist($user);        
             $mng -> flush();
@@ -309,9 +342,7 @@ class homecontroller extends AbstractController{
     
     /**
      * Modifier mot de pass d'administration
-     * @Route("/update-password", name="editpass")
-     * @Route("/updatepass")
-     * 
+     * @Route("/Admin/update-password", name="editpass")
      * @return response
      */
     public function Pass_Update(Request $rqt,UserPasswordEncoderInterface $encoder )
@@ -321,7 +352,6 @@ class homecontroller extends AbstractController{
         $form = $this->createForm(EditPasswordType::class, $newpass);
         $form->handleRequest($rqt);
         if($form->isSubmitted()&& $form->isValid()){
-            //Verification de l'ancien mot de passe
             if(!password_verify($newpass->getOldPassword(),$oldpass->getPsd())){
                 $form->get('OldPassword')->addError(new FormError("L'ancien mot de passe que vous avez entrer n'est pas votre mot de pass valide !") );
             }else{
@@ -341,18 +371,6 @@ class homecontroller extends AbstractController{
     }
     
     /**
-     * Suppression de classement
-     * @Route("/Suppression/{suppid}", name="delcateg")
-     * @return Response
-     */
-    public function deleteclassement(Role $suppid):Response
-    {
-        $mgr = $this -> getDoctrine()->getManager();
-        $mgr->remove($suppid);
-        $mgr->flush();
-        return $this->redirectToRoute('Adminviewproject');
-    }
-    /**
      * @Route("Z-LINK/A_propos", name="z-apropos")
      * @return Response
      */
@@ -371,4 +389,53 @@ class homecontroller extends AbstractController{
             'dat'=>$tdat
         ]);
     }
+    /**
+     * Visualisation des suggestion
+     * @Route("/view-suggestion",name="adminviewsuggestion")
+     * @return Response
+     */
+    public function viewadmsug(SuggestionRepository $vsug){
+        $vsg = $vsug->findAll();
+        return $this->render('page/Adminviewsug.html.twig', [
+            'vsg' => $vsg
+        ]);
+    }
+    /**
+     * Suppression de suggestion
+     * @Route("/Admin/{slugsug}", name="sugdelete")
+     * @return Response
+     */
+    public function deletesuggestion(string $slugsug,SuggestionRepository $repository)
+    {
+        $sug=$repository->findOneBy(['id'=>$slugsug]);
+        $mgr = $this -> getDoctrine()->getManager();
+        $mgr->remove($sug);
+        $mgr->flush();
+        return $this->redirectToRoute('adminviewsuggestion');
+    }
+
+    /**
+     * @Route("/Admin/Editer/{slugproject}", name="Mod_project")
+     * @return Response
+     */
+    public function Editproject(string $slugproject,AdRepository $repository, Request $rqt)
+    {
+        $slugify = new Slugify();
+        $ad = $repository->findOneBy(['Slug'=>$slugproject]);
+        $form = $this -> createForm(EditAdType::class, $ad);
+        $form -> handleRequest($rqt);
+        if($form->isSubmitted()&&$form->isValid()){
+            $slug=$slugify ->slugify($form->get('Title')->getData()).'-'.$slugify ->slugify($form->get('Version')->getData());
+            $ad->setSlug($slug);
+            $mng = $this-> getDoctrine()->getManager();
+            $mng -> persist ($ad);
+            $mng-> flush();
+            return $this->redirectToRoute('adminviewproject');
+        }
+        return $this->render("editer/editproject.html.twig",[
+            "form"=> $form->createView(),
+            "ad"=>$ad
+        ]);
+    }
+
 }

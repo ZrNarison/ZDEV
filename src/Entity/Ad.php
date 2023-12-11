@@ -72,19 +72,20 @@ class Ad
         $this->posteurs = new ArrayCollection();
     }
     
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     * Undocumented function
-     *
-     * @return integer|null
-     */
-    public function initializeSlug(){
-        if(empty($this->ProjectSlug)){
-            $slugify= new Slugify();
-            $this->ProjectSlug = $slugify->Slugify($this->Title .''.  $this->Version);
-        }
-    }
+    // /**
+    //  * @ORM\PrePersist
+    //  * @ORM\PreUpdate
+    //  * Undocumented function
+    //  *
+    //  * @return integer|null
+    //  */
+    // public function initializeSlug(){
+    //     if(empty($this->Slug)){
+    //         $slugify= new Slugify();
+    //         $datsortie=$dtsortie->Format("d-m-Y");
+    //         $this->Slug = $slugify->Slugify($this->Title .'-'.  $this->$datsortie.'-'.  $this->Version);
+    //     }
+    // }
 
     public function getId(): ?int
     {

@@ -1,25 +1,34 @@
 $(document).ready(function(){
-	var ch =$("#checkbox");
-	var psw =$("#passwordlogin");
 	
-	ch.click(function(){
-	   if(ch.prop("checked")){
-		  psw.attr("type","text");
-	   }else{
-		  psw.attr("type","password");
-	   }
-	});
-	$('#Submit').click(function(){
-		const index = ('#ad_posteurs div.form-group').length;
-		const temp = $('#ad_posteurs').data('prototype').replace(/_name_/g,index);
-		// console.log(temp);
+	$('#add-posteur').click(function(){
+		const index =$("#ad_posteurs .form-group").length;
+		const temp = $('#ad_posteurs').data('prototype').replace(/__name__/g,index);
 		$('#ad_posteurs').append(temp);	
 		handleDeleteButtons();	
 	});	
 	function handleDeleteButtons(){
-		$('button[data-action-"delete"]').click(function(){
+		$('button[data-action="delete"]').click(function(){
 			const target = this.dataset.target;
-			console.log(target);
+			$(target).remove();
 		})
 	}
-});
+	handleDeleteButtons();
+	$('section').hide();
+	$("footer").on('mouseenter',function(){
+		$('section').show();
+	});
+	$("body"),$("nav").on("mouseenter",function(){
+		$('section').hide();
+	});
+	let input = document.querySelector("#passwordlogin");
+	let Btn = document.querySelector("#logineye");
+	Btn.onclick=function(){
+	   if(input.type === "password"){
+		  input.type ="text";
+		  Btn.classList.add("active");
+	   }else{
+		  input.type="password";
+		  Btn.classList.remove("active");
+	   }
+	}
+})

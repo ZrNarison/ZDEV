@@ -247,7 +247,8 @@ class User implements UserInterface
 
     public function removeUserRole(Role $userRole): self
     {
-        if ($this->userRoles->removeElement($userRole)) {
+        if ($this->userRoles->contains($userRole)) {
+            $this->userRoles->removeElement($userRole);
             $userRole->removeUser($this);
         }
 

@@ -1,5 +1,5 @@
 {% for d in projet %}
-<div class="container-fluid float-start col-md-2 swipper swipper-wrapper swipper-slide">
+<div class="container-row float-start col-md-2 swipper swipper-wrapper swipper-slide">
     <div class="jumbotron mt-3 text-dark" id="pform">
         <h1 class="display-6 text-uppercase fs-6 text-center text-white card bg-primary">{{d.title|u.truncate(15,'...')}}</h1>
         <div class="container">
@@ -8,7 +8,6 @@
         <p class="text-uppercase lead text-danger text-bold text-center">{{d.title}} {{d.version}}</p>                    
         <p class="text-center text-white">{{d.description|u.truncate(60,'...')}}</p>                    
         <p class="container"><a href="{{path('vueonedev',{'slug':d.slug})}}" class="btn btn-outline-success fs-6">{{'En savoir plus'|u.truncate(15,'...')}}</a></p>
-        {# <p class="container"><a href="{{path('vueonedev',{'project':d.Id})}}" class="btn btn-outline-success fs-6">{{'En savoir plus'|u.truncate(15,'...')}}</a></p> #}
     </div>
 </div>
 {% endfor %}

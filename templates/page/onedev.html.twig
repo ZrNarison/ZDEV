@@ -1,29 +1,24 @@
 {% extends 'base.html.twig' %}
-{% block title %}
-    {# {{dump(onedev.title)}} #}
-    {{ad.title|upper}} {{ad.version}}
-{% endblock %}
+{% block title %}{{ad.title|upper}}{% endblock %}
 {% block body %}
 <div class="one-dev" style="background-image: url( /img/dev/{{ ad.fichiers }} )">
     <div class="container">
-    <div class="container">
-        <h1>{{ad.Title|upper}}</h1>
-        <p class"h2">{{ad.version}}</p>
+        <h1 class="text-white">{{ad.Title|upper}}</h1>
+        <p class="h2 text-white">{{ad.version}}</p>
         <a href="{{path('viewproject')}}" class="btn btn-primary">{{'Retour'}}</a>
-    </div>
     </div>
 </div>
 <div class="container mt-3 text-body">
-    <div class=" container row">
-        <div class="col-md-8 mb-0 text-white-50">
-        {{ad.title}} est {{ad.description|raw}}. Développé en {{ad.Techno|upper }} Technologie (langage de programmation) du {{ad.Datedesortie|date("d/m/Y")}} 
+    <div class="row">
+        <div class="col-8 mb-0 mt-5 float-start text-white-50">
+        {{ad.title}} est {{ad.description|raw}}. Développé avec une langage de programmation {{ad.Techno|upper }}  du {{ad.Datedesortie|date("d/m/Y")}} 
             <div id="carouselIndecators" >
                 <ol class="carousel-indecators">
                     {# {% for posteur in ad.posteurs %}
                         <li class="#cIndicators" data-slide-to="{{loop.index0}}" {% if loop.posteur %} class="active" {% endif %}></li>
                     {% endfor %} #}
                 </ol>
-                <div class="carousel-inner" >
+                <div class="container carousel-inner" >
                     {% for posteur in ad.posteurs %}
                         {# <div class="carousel-item {% if loop.first %} active {% endif %}"> #}
                         <div class="carousel-item active ">
@@ -37,7 +32,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-1"></div>
+        <div class="col-1 float-start"></div>
+        <div class="row float-end col card bg-secondary card" style="margin-top:200px">
+            <div class="row">
+                {% include('page/post.html.twig') %} 
+            </div>
+                <p class="h6 float-start mb-5 col-md-12 text-white">Je développé cet logiciel avec de {{ad.Techno}}. C'est l'une de ma langage de progammation que j'ai maitrise fortement  </p>
+        </div>
+        {# <div class="col-md-1"></div>
         <div class="col-md-3">
             <div class="row">
                 <div class="col-8">
@@ -48,12 +50,8 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
+        </div> #}
     </div>
 </div>
-<div class="container text-danger">
-    <div class="float-end m-1">
-        {% include('complement/footer.html.twig') %}
-    </div>
-</div>
+{% include('complement/footer.html.twig') %}
 {% endblock %}

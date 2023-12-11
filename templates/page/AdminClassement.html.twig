@@ -14,10 +14,10 @@
                 {% for l in categ %}
                 <tbody class="bg-white">
                     <tr>
-                        <td>{{l.Title|upper}}</td>
-                        <td class="col-md-1">
-                            <a href="{{path('class_edit',{'slug':l.RoleSlug})}}" class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a onclick="return confirm('Etes vous sur d avoir supprimer le projet nommé  {{l.Title|upper}} ?')" href="{{path('delcateg',{'suppid':l.id})}}" class="btn btn-sm"><i class="fas fa-trash text-danger"></i></a>
+                        <td class="col-10">{{l.Title|upper}}</td>
+                        <td>
+                            <a href="{{path('classedit',{'slugrole':l.RoleSlug})}}" class="btn btn-sm float-start"><i class="fa-solid fa-pen-to-square text-success"></i></a>
+                            <a onclick="return confirm('Etes vous sur d avoir supprimer le projet nommé  {{l.Title|upper}} ?')" href="{{path('delcateg',{'slugcat':l.id})}}" class="btn btn-sm float-start"><i class="fas fa-trash text-danger"></i></a>
                         <td>
                     </tr>
                 </tbody>

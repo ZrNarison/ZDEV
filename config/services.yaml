@@ -6,10 +6,10 @@
 parameters:
     dev_directory: '%kernel.project_dir%/public/img/dev'
     user_directory: '%kernel.project_dir%/public/img/user'
-    tech_directory: '%kernel.project_dir%/public/img/tech'
-    info_directory: '%kernel.project_dir%/public/img/info'
+    tec_directory: '%kernel.project_dir%/public/img/tech'
+    inf_directory: '%kernel.project_dir%/public/img/info'
     pub_directory: '%kernel.project_dir%/public/img/pub'
-    posteur_directory: '%kernel.project_dir%/public/img/pub'
+    pos_directory: '%kernel.project_dir%/public/img/posteur'
 
 services:
     # default configuration for services in *this* file

@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use ORM\PreUpdate;
 use ORM\PrePersist;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SuggestionRepository;
 
 /**
  * @ORM\Entity(repositoryClass=SuggestionRepository::class)
- * @ORM\HasLifecycleCallBacks()
+ * @ORM\HasLifecycleCallbacks()
  */
 class Suggestion
 {
@@ -41,6 +42,11 @@ class Suggestion
     private $dateSuggestion;
 
     /**
+     * @ORM\Column(type="text")
+     */
+    private $SugSlug;
+
+    /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      * Undocumented function
@@ -49,9 +55,18 @@ class Suggestion
      */
     public function initializedate(){
         if(empty($this->dateSuggestion)){
-            $date= new Date();
-            $this->dateSuggestion = $date;
+            $this->dateSuggestion = new \DateTime();
         }
+    }
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     *
+     * @return string|null
+     */
+    public function __toString()
+    {
+        return $this->getDateSuggestion();
     }
 
     /**
@@ -62,9 +77,9 @@ class Suggestion
      * @return integer|null
      */
     public function initializeSlug(){
-        if(empty($this->SugComment)){
+        if(empty($this->SugSlug)){
             $slugify= new Slugify();
-            $this->SugComment = $slugify->Slugify($this->Contact .'-'.  $this->Sugemail.'-'.  $this->dateSuggestion);
+            $this->SugSlug = $slugify->Slugify($this->Contact .'-'.  $this->Sugemail);
         }
     }
 
@@ -117,6 +132,18 @@ class Suggestion
     public function setDateSuggestion(\DateTimeInterface $dateSuggestion): self
     {
         $this->dateSuggestion = $dateSuggestion;
+
+        return $this;
+    }
+
+    public function getSugSlug(): ?string
+    {
+        return $this->SugSlug;
+    }
+
+    public function setSugSlug(string $SugSlug): self
+    {
+        $this->SugSlug = $SugSlug;
 
         return $this;
     }

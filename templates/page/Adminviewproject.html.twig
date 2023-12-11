@@ -22,10 +22,10 @@
                             <td>{{l.Version|upper}}</td>
                             <td class="text-justify">{{l.Techno|upper}}</td>
                             <td class="text-center">{{l.Datedesortie|date("d/m/Y")}}</td>
-                            <td>{{l.Description|u.truncate(60,'.')}}</td>
+                            <td>{{l.Description|u.truncate(60,'...')}}</td>
                             <td class="col-md-1">
-                                <a href="{{path('Modproject',{'eproject':l.slug})}}" class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a onclick="return confirm('Etes vous sur d avoir supprimer le projet nommé  {{l.Title|upper}} ?')" href="{{path('delproject',{'id':l.id})}}" class="btn btn-sm"><i class="fas fa-trash text-danger"></i></a>
+                                <a href="{{path('Mod_project',{'slugproject':l.slug})}}" class="btn btn-sm"><i class="fa-solid fa-pen-to-square text-success"></i></a>
+                                <a onclick="return confirm('Etes vous sur d avoir supprimer le projet nommé  {{l.Title|upper}} ?')" href="{{path('del_project',{'slug':l.slug})}}" class="btn btn-sm"><i class="fas fa-trash text-danger"></i></a>
                             <td>
                         </tr>
                     </tbody>

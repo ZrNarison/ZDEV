@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Assert\NoBlank;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleRepository;
@@ -36,6 +37,11 @@ class Role
      */
     private $RoleSlug;
 
+    public function __toString(): string
+    {
+        return $this->getTitle();
+    }
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -54,17 +60,7 @@ class Role
         }
     }
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     *
-     * @return string|null
-     */
-    public function __toString(): ?string
-    {
-        return $this->getTitle();
-    }
-
+    
     public function getId(): ?int
     {
         return $this->id;

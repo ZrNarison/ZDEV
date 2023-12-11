@@ -1,30 +1,20 @@
 {% extends 'base.html.twig' %}
 {% block head %}{% endblock head %}
 {% block body %}
-<div class="row">
-    <div class="row loat-start">
-        <div class="row">
-            <div class="col">
-                <h1 class="display-10">Bienvenue sur Z-Link 
-            </div>
-        </div>
-    </div>
     <div class="container">
-        <div class="float-start card-body text-dark col-8">
-            {% include('page/additif.html.twig') %}
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="row float-end card col-3 bg-secondary" style="margin-top:200px">
             <div class="row">
-                {% include('page/post.html.twig') %} 
+                <div class="col">
+                    <h1 class="display-10">Bienvenue sur Z-Link 
+                </div>
             </div>
-            {% for inf in info %}
-                    <p class="h6 float-start mb-5 col-md-12">{{inf.information}} </p>
-                {% endfor %}
+        <div class="container mt-3">
+            <div class="row ">
+                <div class="container row">
+                    {% include('page/additif.html.twig') %}
+                </div>
+            </div>
         </div>
     </div>
-</div>
-{% include('complement/headfooter.html.twig') %}
-{% include('complement/footer.html.twig') %}
+    {% include('complement/headfooter.html.twig') %}
+    {% include('complement/footer.html.twig') %}
 {% endblock body %}
