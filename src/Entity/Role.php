@@ -7,11 +7,12 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=RoleRepository::class)
- * @ORM\HasLifecycleCallbacks()
+ * @HasLifecycleCallbacks()
  */
 class Role
 {
@@ -54,10 +55,8 @@ class Role
      * @return integer|null
      */
     public function initializeSlug(){
-        if(empty($this->RoleSlug)){
-            $slugify= new Slugify();
-            $this->RoleSlug = $slugify->Slugify($this->title);
-        }
+        $slugify= new Slugify();
+        $this->RoleSlug = $slugify->Slugify($this->title);
     }
 
     

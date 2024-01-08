@@ -103,36 +103,34 @@ class homecontroller extends AbstractController{
     public function newprojetct(Request $rqt){
         $user = $this->getUser();
         $project = new Ad();
-        $slugify = new Slugify();
         $mgr = $this-> getDoctrine()->getManager();
         $form = $this -> createForm(AdType::class,$project);
         $form->handleRequest($rqt);
-        if($form->isSubmitted()){
-            foreach($project->getPosteurs()as $posteurs){
-                $photo=$posteurs->getPhoto();
-                // $photo=$posteurs->getPhoto()->getData() ;
-                dump($photo);
-                // $posteurs -> setAd($project);
-                // $postfile = md5(uniqid()).'.'.$photo->guessExtension();//Misy erreur maka ny extension files impoté
-                // $directoryposteur=$this->getParameter('pos_directory');
-                // $posteurs->setphoto($postfile);
-                // $mgr->persist($posteurs);
-                // $photo->move($directoryposteur,$postfile);
+        if($form->isSubmitted()&& $form->isValid()){
+            // $user=$user->getId();
+            foreach($project->getPosteurs() as $posteur){
+                $posteur->setAd($project);
+                $photo=$posteur->getPhoto();
+                $postfile = md5(uniqid()).'.jpg';
+                $directoryposteur=$this->getParameter('pos_directory');
+                $posteur->setPhoto($postfile);
+                $mgr->persist($posteur);
+                if ($photo instanceof UploadedFile) {
+                    $photo->move($directoryposteur, $postfile);
+                }
+                $project->setAuteur($user);
+                $mgr -> flush();
             }
             $fichier = $form->get('fichiers')->getData();
             $dtsortie = $form->get('datedesortie')->getData();
-            $sortie=$dtsortie->Format("d-m-Y");
-            $slug=$slugify ->slugify($form->get('Title')->getData()."-".$sortie."-". $form->get('Version')->getData());
-            $project->setAuteur($user) 
-                    ->setSlug($slug);
-            $filename=md5(uniqid()).'.'. $fichier->guessExtension();
-            $directory=$this->getParameter('dev_directory');
+            $filename = md5(uniqid()) . '.' . $fichier->guessExtension();
+            $directory = $this->getParameter('dev_directory');
             $project->setFichiers($filename);
-            dd($project,$posteurs,$fichier,$filename);
-            $mgr -> persist($project);          
-            $fichier->move($directory,$filename);
-            $mgr -> flush();
-            $this->addFlash("success","Le project N° <strong> {$project->getId()}</strong> dont son nom est <strong>  {$project->getTitle()} </strong> à été bien enregistré !");
+            $project->setAuteur($user);
+            $mgr->persist($project);
+            $mgr->flush();
+            $fichier->move($directory, $filename);
+            $this->addFlash("","Le project N° <strong> {$project->getId()}</strong> dont son nom est <strong>  {$project->getTitle()} </strong> à été bien enregistré !");
             return $this->redirectToRoute('newproject');
         }
         return $this->render("page/Adproject.html.twig",[
@@ -150,9 +148,8 @@ class homecontroller extends AbstractController{
      */
     public function deleteproject(string $slug,AdRepository $repository)
     {
-        $ad=$repository->findOneBy(['Slug'=>$slug]);
+        $ad=$repository->findOneBy(['id'=>$slug]);
         $mgr = $this -> getDoctrine()->getManager();
-        dd($ad);
         $mgr->remove($ad);
         $mgr->flush();
         return $this->redirectToRoute('adminviewproject');
@@ -169,69 +166,7 @@ class homecontroller extends AbstractController{
             'projet' => $project
         ]);
     }
-    /**
-     * Visualisation des compte
-     * @Route("/Admin/view-admincompte",name="adminviewcompte")
-     * @return Response
-     */
-    public function admincompte(UserRepository $user){
-        $User = $user->findAll();
-        return $this->render('page/Adminviewcompte.html.twig', [
-            'User' => $User
-        ]);
-    }
     
-    
-    /**
-     * Visualisation des classement
-     * @Route("/Admin/view-adminclassement",name="adminviewclassement")
-     * @return Response
-     */
-    public function viewclass(RoleRepository $cat){
-        $categ = $cat->findAll();
-        return $this->render('page/AdminClassement.html.twig', [
-            'categ' => $categ
-        ]);
-    }
-
-    /**
-     * Editer classement
-     * @Route("/Admin/mod{slugrole}", name="classedit")
-     * @return Response
-     */
-    public function Editclassement(string $slugrole,RoleRepository $classement, Request $rqt){
-        $slugify = new Slugify();
-        $AdClass=$classement->findOneBy(['RoleSlug'=>$slugrole]);
-        $form = $this -> createForm(EditCategorieType::class, $AdClass);
-        $form -> handleRequest($rqt);
-        if($form->isSubmitted()&&$form->isValid()){
-            $slug=$slugify ->slugify($form->get('title')->getData());
-            $AdClass->setRoleSlug($slug);
-            $mng = $this-> getDoctrine()->getManager();
-            $mng -> persist ($AdClass);
-            $mng-> flush();
-            return $this->redirectToRoute('adminviewclassement');
-        }
-        return $this->render("editer/editclass.html.twig",[
-            "form"=> $form->createView(),
-            "AdClass"=>$AdClass
-        ]);
-    }
-
-    /**
-     * Suppression de classement
-     * @Route("/Suppression/{slugcat}", name="delcateg")
-     * @return Response
-     */
-    public function deleteclassement(string $slugcat,RoleRepository $repository)
-    {
-        $cat=$repository->findOneBy(['id'=>$slugcat]);
-        $mgr = $this -> getDoctrine()->getManager();
-        $mgr->remove($cat);
-        $mgr->flush();
-        return $this->redirectToRoute('adminviewclassement');
-    }
-
     /**
      * Ajout compte d'Administrateur
      * @Route("/Admin/Ad-newcompte", name="newcompte")
@@ -273,7 +208,6 @@ class homecontroller extends AbstractController{
     public function OneShow(string $slug,AdRepository $repository,UserRepository $user){
         $users = $user->findAll();
         $ad=$repository->findOneBy(['Slug'=>$slug]);
-        // dd($ad);
         return $this->render('page/onedev.html.twig', [
             'ad' => $ad,
             'info' => $users
@@ -289,7 +223,7 @@ class homecontroller extends AbstractController{
        $nclass= new Role();
        $form = $this -> createForm(CategorieType::class,$nclass);
        $form ->handleRequest($rqt);
-       if($form->isSubmitted()){
+       if($form->isSubmitted()&& $form->isValid()){
            $mgr = $this -> getDoctrine()->getManager();
            $mgr -> persist($nclass);
            $mgr -> flush(); 
@@ -322,13 +256,10 @@ class homecontroller extends AbstractController{
      */
     public function editProfil(Request $rqt)
       {
-          $slugify = new Slugify();
           $user = $this->getUser();
           $form=$this->createForm(EditUserType::class, $user);
           $form->handleRequest($rqt);
         if($form->isSubmitted()&& $form->isValid()){
-            $slug=$slugify ->slugify($form->get('firstname')->getData()).'-'.$slugify ->slugify($form->get('lastname')->getData());
-            $user->setSlugUser($slug);
             $mng = $this -> getDoctrine()->getManager();
             $mng -> persist($user);        
             $mng -> flush();
@@ -420,14 +351,23 @@ class homecontroller extends AbstractController{
      */
     public function Editproject(string $slugproject,AdRepository $repository, Request $rqt)
     {
-        $slugify = new Slugify();
         $ad = $repository->findOneBy(['Slug'=>$slugproject]);
         $form = $this -> createForm(EditAdType::class, $ad);
         $form -> handleRequest($rqt);
         if($form->isSubmitted()&&$form->isValid()){
-            $slug=$slugify ->slugify($form->get('Title')->getData()).'-'.$slugify ->slugify($form->get('Version')->getData());
-            $ad->setSlug($slug);
             $mng = $this-> getDoctrine()->getManager();
+            foreach($ad->getPosteurs() as $posteur){
+                $posteur->setAd($ad);
+                $photo=$posteur->getPhoto();
+                $postfile = md5(uniqid()).'.jpg';
+                $directoryposteur=$this->getParameter('pos_directory');
+                $posteur->setPhoto($postfile);
+                $mng->persist($posteur);
+                if ($photo instanceof UploadedFile) {
+                    $photo->move($directoryposteur, $postfile);
+                }
+                $mng -> flush();
+            }
             $mng -> persist ($ad);
             $mng-> flush();
             return $this->redirectToRoute('adminviewproject');

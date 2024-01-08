@@ -6,13 +6,14 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\HasLifecycleCallbacks()
+ * @HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
@@ -73,15 +74,12 @@ class User implements UserInterface
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
-     * Undocumented function
      *
      * @return void
      */
     public function initializeSlug(){
-        if(empty($this->ProjectSlug)){
-            $slugify= new Slugify();
-            $this->ProjectSlug = $slugify->Slugify($this->firstname .''.  $this->email);
-        }
+        $slugify= new Slugify();
+        $this->SlugUser = $slugify->Slugify($this->firstname .'-'.  $this->email);
     }
 
     public function __construct()

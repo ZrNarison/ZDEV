@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Ad;
 use App\Form\ImageType;
+use App\Form\ImageEditType;
 use Symfony\Component\Form\Button;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,7 +30,7 @@ class EditAdType extends AppType
                 'posteurs',
                 CollectionType::class,
                 [
-                    'entry_type' => ImageType::class,
+                    'entry_type' => ImageEditType::class,
                     'allow_add' => true
                 ]  
             )

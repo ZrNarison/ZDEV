@@ -14,15 +14,15 @@
         {{ad.title}} est {{ad.description|raw}}. Développé avec une langage de programmation {{ad.Techno|upper }}  du {{ad.Datedesortie|date("d/m/Y")}} 
             <div id="carouselIndecators" >
                 <ol class="carousel-indecators">
-                    {# {% for posteur in ad.posteurs %}
-                        <li class="#cIndicators" data-slide-to="{{loop.index0}}" {% if loop.posteur %} class="active" {% endif %}></li>
-                    {% endfor %} #}
+                    {% for posteur in ad.posteurs %}
+                        {# <li class="#cIndicators" data-slide-to="{{loop.index0}}" {% if loop.posteur %} class="active" {% endif %}></li> #}
+                    {% endfor %} 
                 </ol>
                 <div class="container carousel-inner" >
                     {% for posteur in ad.posteurs %}
                         {# <div class="carousel-item {% if loop.first %} active {% endif %}"> #}
                         <div class="carousel-item active ">
-                            <img class"d-none d-md-block w-10" src="/img/dev/{{posteur.photo}}" alt="{{posteur.caption}}">
+                            <img class"d-none d-md-block w-10" src="/img/dev/{{posteur.Photo}}" alt="{{posteur.caption}}">
                             <div class="">
                                 <h5>{{ad.Title}}</h5>
                                 <p>{{posteur.caption}}</p>

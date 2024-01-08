@@ -3,14 +3,14 @@
 namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
+use ORM\HasLifecycleCallbacks;
 use App\Repository\AdRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=AdRepository::class)
- * @ORM\HasLifecycleCallBacks()
  */
 class Ad
 {
@@ -46,46 +46,46 @@ class Ad
      */
     private $fichiers;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $Slug;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="ads")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Auteur;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $Techno;
 
+    
     /**
-     * @ORM\OneToMany(targetEntity=Posteur::class, mappedBy="ad", orphanRemoval=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Posteur", mappedBy="ad", cascade={"persist"})
      */
     private $posteurs;
-
     public function __construct()
     {
         $this->posteurs = new ArrayCollection();
     }
     
-    // /**
-    //  * @ORM\PrePersist
-    //  * @ORM\PreUpdate
-    //  * Undocumented function
-    //  *
-    //  * @return integer|null
-    //  */
-    // public function initializeSlug(){
-    //     if(empty($this->Slug)){
-    //         $slugify= new Slugify();
-    //         $datsortie=$dtsortie->Format("d-m-Y");
-    //         $this->Slug = $slugify->Slugify($this->Title .'-'.  $this->$datsortie.'-'.  $this->Version);
-    //     }
-    // }
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="auteur_id", referencedColumnName="id", nullable=false)
+     */
+    private $Auteur;
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function initializeSlug(){
+            $slugify= new Slugify();
+            $this->Slug= $slugify->Slugify($this->Title) .'-'.$slugify->Slugify($this->Version);            
+    }
+
+    public function __toString()
+    {
+        return $this->getId() ? (string) $this->getId() : 'New Ad Entity';
+    }
 
     public function getId(): ?int
     {
@@ -152,17 +152,6 @@ class Ad
         return $this;
     }
 
-    public function getSlug(): ?string
-    {
-        return $this->Slug;
-    }
-
-    public function setSlug(string $Slug): self
-    {
-        $this->Slug = $Slug;
-
-        return $this;
-    }
 
     public function getAuteur(): ?User
     {
@@ -214,6 +203,19 @@ class Ad
                 $posteur->setAd(null);
             }
         }
+
+        return $this;
+    }
+
+    
+    public function getSlug(): ?string
+    {
+        return $this->Slug;
+    }
+
+    public function setSlug(string $Slug): self
+    {
+        $this->Slug = $Slug;
 
         return $this;
     }

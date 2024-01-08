@@ -28,8 +28,8 @@ class Posteur
     private $Caption;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ad::class, inversedBy="posteurs")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ad", inversedBy="posteurs", cascade={"persist"})
+     * @ORM\JoinColumn(name="ad_id", referencedColumnName="id")
      */
     private $ad;
 

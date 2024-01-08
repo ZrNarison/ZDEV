@@ -7,10 +7,11 @@ use ORM\PrePersist;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SuggestionRepository;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 /**
  * @ORM\Entity(repositoryClass=SuggestionRepository::class)
- * @ORM\HasLifecycleCallbacks()
+ * @HasLifecycleCallbacks()
  */
 class Suggestion
 {
@@ -54,10 +55,9 @@ class Suggestion
      * @return integer|null
      */
     public function initializedate(){
-        if(empty($this->dateSuggestion)){
-            $this->dateSuggestion = new \DateTime();
-        }
+        $this->dateSuggestion = new \DateTime();
     }
+
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -77,10 +77,8 @@ class Suggestion
      * @return integer|null
      */
     public function initializeSlug(){
-        if(empty($this->SugSlug)){
-            $slugify= new Slugify();
-            $this->SugSlug = $slugify->Slugify($this->Contact .'-'.  $this->Sugemail);
-        }
+        $slugify= new Slugify();
+        $this->SugSlug = $slugify->Slugify($this->Contact .'-'.  $this->Sugemail);
     }
 
     public function getId(): ?int
